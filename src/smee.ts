@@ -59,7 +59,10 @@ function smeeWebhook (webhookProxyUrl : string) {
       const payload = req.body as FreshdeskWebhookNotification
       const contactId = payload.freshdesk_webhook.ticket_contact_unique_external_id
 
-      const html = payload.freshdesk_webhook.ticket_latest_public_comment
+      let html = payload.freshdesk_webhook.ticket_latest_public_comment
+
+      // "Rui LI : <div s...
+      html = html.replace(/^.*?</, '<')
 
       // https://www.tutorialspoint.com/how-to-remove-html-tags-from-a-string-in-javascript
       const text = html.replace(/(<([^>]+)>)/ig, '')
