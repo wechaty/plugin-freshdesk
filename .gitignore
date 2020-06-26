@@ -107,3 +107,4 @@ t/
 t.*
 package-lock.json
 *.memory-card.json
+.DS_Store
