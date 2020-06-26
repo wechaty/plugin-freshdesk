@@ -31,7 +31,7 @@ function freshdeskTalker (
     const name       = talker.name()
 
     const room = message.room()
-    const text = message.text()
+    const text = await message.mentionText()
 
     /**
      * Create contact if not exist yet

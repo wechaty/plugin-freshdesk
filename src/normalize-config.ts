@@ -42,6 +42,7 @@ function normalizeConfig (config: WechatyFreshdeskConfig) {
     portalUrl,
     webhookProxyUrl,
   }
+
 }
 
 export { normalizeConfig }
