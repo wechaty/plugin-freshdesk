@@ -1,6 +1,6 @@
 {
   "name": "wechaty-plugin-freshdesk",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Connect WeChat Conversation with Freshdesk Tickets",
   "main": "dist/src/mod.js",
   "typings": "dist/src/mod.d.ts",
