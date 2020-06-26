@@ -27,6 +27,7 @@ function freshdeskTalker (
     log.verbose('WechatyPluginFreshdesk', 'talkFreshdesk(%s)', message)
 
     const talker = message.from()!
+
     const externalId = talker.id
     const name       = talker.name()
 
@@ -62,9 +63,10 @@ function freshdeskTalker (
 
     } else {
 
-      const subject = talker.name() + room
-        ? (' from ' + await room?.topic())
+      let subject = room
+        ? (' from ' + await room.topic())
         : ''
+      subject = name + subject
 
       await createTicket({
         requesterId: userId,
