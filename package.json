@@ -30,6 +30,7 @@
     "express": "^4.17.1",
     "smee-client": "^1.1.0",
     "typed-rest-client": "^1.7.3",
+    "unirest": "^0.6.0",
     "wechaty-plugin-contrib": "^0.11.1"
   },
   "devDependencies": {

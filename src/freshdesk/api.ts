@@ -1,7 +1,4 @@
 /* eslint-disable camelcase */
-import { RestClient }             from 'typed-rest-client'
-import { BasicCredentialHandler } from 'typed-rest-client/Handlers'
-
 import {
   Status,
   Priority,
@@ -9,6 +6,8 @@ import {
   TicketPayload,
   // ContactPayload,
 }                   from './schema'
+
+const unirest = require('unirest')
 
 interface CreateTicketArgs {
   requesterId : number,
@@ -20,6 +19,7 @@ interface ReplyTicketArgs {
   ticketId : number,
   userId   : number,
   body     : string,
+  attachments: [],
 }
 
 interface CreateContactArgs {
@@ -27,17 +27,15 @@ interface CreateContactArgs {
   name       : string,
 }
 
-const getClient = (
-  portalUrl: string,
-  apiKey: string,
+const getUnirest = (
+  portalUrl : string,
+  apiKey    : string,
 ) => {
-  const bearerHandler: BasicCredentialHandler = new BasicCredentialHandler(apiKey, 'X')
-  const client = new RestClient(
-    'WechatyPluginFreshdesk',
-    portalUrl + '/api/v2/',
-    [ bearerHandler ],
-  )
-  return client
+  const auth = 'Basic ' + Buffer.from(apiKey + ':' + 'X').toString('base64')
+  const headers = {
+    'Authorization': auth,
+  }
+  return unirest.headers(headers)
 }
 
 const ticketCreator = (client: RestClient) => async (args: CreateTicketArgs): Promise<number> => {
@@ -120,7 +118,7 @@ const contactGetter = (client: RestClient) => async (externalId: string): Promis
 }
 
 export {
-  getClient,
+  getUnirest as getClient,
   contactGetter,
   contactCreator,
   ticketCreator,
