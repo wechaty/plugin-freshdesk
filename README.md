@@ -46,11 +46,37 @@ wechaty.use(FreshdeskPlugin)
 
 ## Configure Freshdesk Webhooks
 
-In order to receive the reply and close events from Freshdesk, we need to configure two webhooks:
+In order to receive the reply and close events from Freshdesk, we need to configure webhooks from the Freshdesk platform.
 
-To Be Added ...
+### 1 Go to Automation Setting Page
 
-The `request endpoint URL` must be as same as the `webhookProxyUrl` setting in the `config`.
+1. Login to your Freshdesk agent account, from the menu on the left, select `Admin`, then select `Automations`.
+1. Below the `Rules that run on`, there will be three selections: `Ticket Creation`, `Time Triggers`, and `Ticket Updates`.
+
+### 2 Create a `Ticket Updates` Rule
+
+![Freshdesk Automation Rule](docs/images/freshdesk-automations-rule.png)
+
+1. Select `Ticket Updates`, click the `New rule` button.
+1. Configure the rule as the following summary:
+    1. When `Ticket is updated`
+    1. When `an action performed by Agent`
+    1. When `public Note is Added`  
+        OR  
+        `When Reply is Sent`
+    1. `Trigger Webhook Method` - POST Url: <https://smee.io/your_smee_io_proxy_url>
+
+And make sure you have configured the Webhook Content as the following:
+
+![Freshdesk Automation Rule](docs/images/freshdesk-automations-webhook.png)
+
+1. `Ticket ID {{ticket.id}}`
+1. `Last Public Comment {{ticket.latest_public_comment}}`
+1. `Contact Unique External ID {{ticket.contact.unique_external_id}}`
+
+Then click `Preview and save`.
+
+> Note: the `POST Url` must be as same as the `webhookProxyUrl` setting in the `config`.
 
 See: [Using Webhooks in automation rules that run on ticket updates](https://support.freshdesk.com/support/solutions/articles/132589-using-webhooks-in-automation-rules-that-run-on-ticket-updates)
 
