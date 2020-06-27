@@ -1,29 +1,22 @@
 #!/usr/bin/env ts-node
 
 import test  from 'tstest'
-
-import { RestClient }             from 'typed-rest-client'
-import { BasicCredentialHandler } from 'typed-rest-client/Handlers'
+import fs from 'fs'
 
 import * as api from './api'
 
-const getClientFixture = () => {
-  const apiKey    = 'dDth0V9ew7z7Iw4TW1tu'
+const getUnirestFixture = () => {
   const portalUrl = 'https://juzibot.freshdesk.com/'
+  const apiKey    = 'TbiHxy0YJZ2Q4Bm281XI'
 
-  const bearerHandler: BasicCredentialHandler = new BasicCredentialHandler(apiKey, 'X')
-  const client = new RestClient(
-    'WechatyPluginFreshdesk',
-    portalUrl + '/api/v2/',
-    [ bearerHandler ],
-  )
-  return client
+  const request = api.getUnirest(portalUrl, apiKey)
+  return request
 }
 
 test.skip('contactCreator()', async t => {
-  const createContact = api.contactCreator(getClientFixture())
+  const createContact = api.contactCreator(getUnirestFixture())
   const ret = await createContact({
-    externalId: 'lizhuohuan',
+    externalId: 'lizhuohuan4',
     name: 'huan',
   })
   console.info('ret:', ret)
@@ -31,14 +24,14 @@ test.skip('contactCreator()', async t => {
 })
 
 test.skip('contactGetter()', async t => {
-  const getContact = api.contactGetter(getClientFixture())
+  const getContact = api.contactGetter(getUnirestFixture())
   const ret = await getContact('lizhuohuan')
   console.info('ret:', ret)
   t.ok(getContact)
 })
 
 test.skip('ticketCreator()', async t => {
-  const createTicket = api.ticketCreator(getClientFixture())
+  const createTicket = api.ticketCreator(getUnirestFixture())
 
   const ret = await createTicket({
     description : 'test desc',
@@ -51,7 +44,7 @@ test.skip('ticketCreator()', async t => {
 })
 
 test.skip('ticketGetter()', async t => {
-  const getTicket = api.ticketGetter(getClientFixture())
+  const getTicket = api.ticketGetter(getUnirestFixture())
 
   const ret = await getTicket(64004879462)
   console.info('ret: ', ret)
@@ -60,9 +53,43 @@ test.skip('ticketGetter()', async t => {
 })
 
 test.skip('ticketReplier()', async t => {
-  const replyTicket = api.ticketReplier(getClientFixture())
+  const replyTicket = api.ticketReplier(getUnirestFixture())
 
   const ret = await replyTicket({
+    body     : 'test reply',
+    ticketId : 15,
+    userId   : 64004879462,
+  })
+  console.info('ret: ', ret)
+
+  t.ok(replyTicket)
+})
+
+test('ticketCreator() with attachments', async t => {
+  const createTicket = api.ticketCreator(getUnirestFixture())
+
+  const ret = await createTicket({
+    attachments: [
+      fs.createReadStream('../../README.md'),
+      fs.createReadStream('../../docs/images/freshdesk-wechaty.png'),
+    ],
+    description : 'test desc',
+    requesterId : 64004879462,
+    subject     : 'test',
+  })
+  console.info('ret: ', ret)
+
+  t.ok(createTicket)
+})
+
+test.skip('ticketReplier() with attachments', async t => {
+  const replyTicket = api.ticketReplier(getUnirestFixture())
+
+  const ret = await replyTicket({
+    attachments: [
+      fs.createReadStream('../../README.md'),
+      fs.createReadStream('../../docs/images/freshdesk-wechaty.png'),
+    ],
     body     : 'test reply',
     ticketId : 15,
     userId   : 64004879462,

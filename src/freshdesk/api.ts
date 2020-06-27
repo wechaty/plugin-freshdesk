@@ -1,25 +1,29 @@
 /* eslint-disable camelcase */
+import stream from 'stream'
+
 import {
   Status,
   Priority,
   Source,
   TicketPayload,
-  // ContactPayload,
-}                   from './schema'
-
-const unirest = require('unirest')
+}                     from './schema'
+import {
+  getSimpleUnirest,
+  SimpleUnirest,
+}                     from './unirest'
 
 interface CreateTicketArgs {
   requesterId : number,
   subject     : string,
   description : string,
+  attachments?: stream.Readable[]
 }
 
 interface ReplyTicketArgs {
   ticketId : number,
   userId   : number,
   body     : string,
-  attachments: [],
+  attachments?: stream.Readable[],
 }
 
 interface CreateContactArgs {
@@ -27,90 +31,109 @@ interface CreateContactArgs {
   name       : string,
 }
 
-const getUnirest = (
-  portalUrl : string,
-  apiKey    : string,
-) => {
-  const auth = 'Basic ' + Buffer.from(apiKey + ':' + 'X').toString('base64')
-  const headers = {
-    'Authorization': auth,
-  }
-  return unirest.headers(headers)
+interface IdPayload {
+  id: number
 }
 
-const ticketCreator = (client: RestClient) => async (args: CreateTicketArgs): Promise<number> => {
+const ticketCreator = (rest: SimpleUnirest) => async (args: CreateTicketArgs): Promise<number> => {
+
   const DEFAULT_PAYLOAD = {
-    priority           : Priority.Low,
+    priority           : Priority.Medium,
     source             : Source.Chat,
     status             : Status.Open,
   }
 
-  const payload: TicketPayload = {
+  let payload: TicketPayload = {
     description  : args.description,
     requester_id : args.requesterId,
     subject      : args.subject,
   }
 
-  const ret = await client.create<{ id: number }>('tickets', {
+  payload = {
     ...DEFAULT_PAYLOAD,
     ...payload,
-  })
+  }
 
-  // console.info('ret:', ret)
-  return ret.result!.id
+  const request = rest.post<IdPayload>('tickets')
+
+  if (args.attachments && args.attachments.length > 0) {
+    request.field(payload)
+    args.attachments.forEach(stream => request.attach('attachments[]', stream))
+  } else {
+    request.type('json')
+    request.send(payload)
+  }
+
+  const ret = await request
+
+  // console.info('ret:', ret.body)
+  return ret.body.id
 }
 
-const ticketReplier = (client: RestClient) => async (args: ReplyTicketArgs): Promise<void> => {
+const ticketReplier = (rest: SimpleUnirest) => async (args: ReplyTicketArgs): Promise<number> => {
   const payload = {
     body    : args.body,
     user_id : args.userId,
   }
 
-  const ret = await client.create<{ id: number }>(
-    `tickets/${args.ticketId}/reply`,
-    payload,
-  )
-  void ret
-  // console.info('ret:', ret.result)
-}
+  const request = rest.post<IdPayload>(`tickets/${args.ticketId}/reply`)
 
-const contactCreator = (client: RestClient) => async (args: CreateContactArgs): Promise<number> => {
-  const payload = {
-    name               : args.name,
-    unique_external_id : args.externalId,
+  if (args.attachments && args.attachments.length > 0) {
+    request.field(payload)
+    args.attachments.forEach(stream => request.attach('attachments[]', stream))
+  } else {
+    request.type('json')
+    request.send(payload)
   }
 
-  const ret = await client.create<{ id: number }>(
-    `contacts`,
-    payload,
-  )
-  return ret.result!.id
+  const ret = await request
+  //  as any as { body: IdPayload }
+
+  // console.info('ret:', ret.body)
+  return ret.body.id
 }
 
-const ticketGetter = (client: RestClient) => async (requesterId: number): Promise<number[]> => {
+const ticketGetter = (rest: SimpleUnirest) => async (requesterId: number): Promise<number[]> => {
   const query = `requester_id=${requesterId}`
-  const ret = await client.get<{ id: number }[]>(
-    `tickets?${query}`
-  )
+  const ret = await rest.get<IdPayload[]>(`tickets?${query}`)
 
-  // console.info(ret.result![0])
+  // console.info(ret.body)
+  // return ret.map(p => p.id)
 
-  if (ret.result?.length)  {
-    return ret.result.map(p => p.id)
+  if (ret.body.length)  {
+    return ret.body.map(p => p.id)
   } else {
     return []
   }
 
 }
 
-const contactGetter = (client: RestClient) => async (externalId: string): Promise<undefined | number> => {
-  const query = `unique_external_id:'${externalId}'`
-  const ret = await client.get<{ results: { id: number }[] }>(
-    `search/contacts/?query="${query}"`
-  )
+const contactCreator = (rest: SimpleUnirest) => async (args: CreateContactArgs): Promise<number> => {
+  const payload = {
+    name               : args.name,
+    unique_external_id : args.externalId,
+  }
 
-  if (ret.result?.results.length)  {
-    return ret.result.results.map(p => p.id)[0]
+  const ret = await rest
+    .post<IdPayload>('contacts')
+    .type('json')
+    .send(payload)
+
+  // TODO(huan): deal with HTTP non-200 error
+
+  // console.info(ret.body)
+  return ret.body.id
+}
+
+const contactGetter = (rest: SimpleUnirest) => async (externalId: string): Promise<undefined | number> => {
+  const query = `unique_external_id:'${externalId}'`
+  const ret = await rest
+    .get<{ results: IdPayload[] }>(`search/contacts/?query="${query}"`)
+
+  // console.info(ret.body)
+
+  if (ret.body.results.length)  {
+    return ret.body.results.map(p => p.id)[0]
   } else {
     return undefined
   }
@@ -118,7 +141,7 @@ const contactGetter = (client: RestClient) => async (externalId: string): Promis
 }
 
 export {
-  getUnirest as getClient,
+  getSimpleUnirest as getUnirest,
   contactGetter,
   contactCreator,
   ticketCreator,
