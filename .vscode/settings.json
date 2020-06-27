@@ -77,7 +77,8 @@
     "camelcase",
     "deduped",
     "freshdesk",
-    "gcaufy"
+    "gcaufy",
+    "unirest"
   ],
 
 }
