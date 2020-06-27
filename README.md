@@ -3,7 +3,7 @@
 [![NPM Version](https://img.shields.io/npm/v/wechaty-plugin-freshdesk?color=brightgreen)](https://www.npmjs.com/package/wechaty-plugin-freshdesk)
 [![NPM](https://github.com/wechaty/wechaty-plugin-freshdesk/workflows/NPM/badge.svg)](https://github.com/wechaty/wechaty-plugin-freshdesk/actions?query=workflow%3ANPM)
 
-Freshdesk is a cloud-based helpdesk system that offers powerful solutions for customer service.
+[Freshdesk](https://freshdesk.com) is a cloud-based helpdesk system that offers powerful solutions for customer service.
 
 Wechaty Freshdesk Plugin helps Freshdesk unifies conversations from WeChat, and helps you resolve issues across channels effortlessly!
 
