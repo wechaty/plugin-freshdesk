@@ -3,7 +3,8 @@
 import {
   Message,
   log,
-}                           from 'wechaty'
+}             from 'wechaty'
+import stream from 'stream'
 
 import * as api from './api'
 
@@ -13,13 +14,13 @@ function freshdeskTalker (
 ) {
   log.verbose('WechatyPluginFreshdesk', 'freshdeskTalker(%s, %s)', portalUrl, apiKey)
 
-  const client = api.getClient(portalUrl, apiKey)
+  const rest = api.getUnirest(portalUrl, apiKey)
 
-  const getContact    = api.contactGetter(client)
-  const createContact = api.contactCreator(client)
-  const getTicket     = api.ticketGetter(client)
-  const createTicket  = api.ticketCreator(client)
-  const replyTicket   = api.ticketReplier(client)
+  const getContact    = api.contactGetter(rest)
+  const createContact = api.contactCreator(rest)
+  const getTicket     = api.ticketGetter(rest)
+  const createTicket  = api.ticketCreator(rest)
+  const replyTicket   = api.ticketReplier(rest)
 
   return async function talkFreshdesk (
     message: Message,
@@ -33,6 +34,28 @@ function freshdeskTalker (
 
     const room = message.room()
     const text = await message.mentionText()
+
+    const attachments: stream.Readable[] = []
+
+    switch (message.type()) {
+      case Message.Type.Text:
+        break
+
+      case Message.Type.Image:
+      case Message.Type.Audio:
+      case Message.Type.Video:
+      case Message.Type.Attachment:
+        const duplex = new stream.Duplex()
+        attachments.push(duplex)
+
+        const filebox = await message.toFileBox()
+        filebox.pipe(duplex)
+        break
+
+      default:
+        log.verbose('WechatyPluginFreshdesk', 'talkFreshdesk() message type skipped: %s', Message.Type[message.type()])
+        return
+    }
 
     /**
      * Create contact if not exist yet
@@ -56,6 +79,7 @@ function freshdeskTalker (
       const ticketId = ticketList[0]
 
       await replyTicket({
+        attachments,
         ticketId,
         userId,
         body: text,
@@ -69,6 +93,7 @@ function freshdeskTalker (
       subject = name + subject
 
       await createTicket({
+        attachments,
         requesterId: userId,
         subject,
         description: text,
