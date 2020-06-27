@@ -1,4 +1,4 @@
-# wechaty-plugin-freshdesk 
+# wechaty-plugin-freshdesk
 
 [![NPM Version](https://img.shields.io/npm/v/wechaty-plugin-freshdesk?color=brightgreen)](https://www.npmjs.com/package/wechaty-plugin-freshdesk)
 [![NPM](https://github.com/wechaty/wechaty-plugin-freshdesk/workflows/NPM/badge.svg)](https://github.com/wechaty/wechaty-plugin-freshdesk/actions?query=workflow%3ANPM)
