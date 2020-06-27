@@ -1,7 +1,7 @@
-# wechaty-plugin-freshdesk [![Wechaty Plugin Freshdesk](https://img.shields.io/badge/Wechaty%20Plugin-Freshdesk-brightgreen.svg)](https://github.com/wechaty/wechaty-plugin-freshdesk)
+# wechaty-plugin-freshdesk 
 
- [![NPM Version](https://img.shields.io/npm/v/wechaty-plugin-freshdesk?color=brightgreen)](https://www.npmjs.com/package/wechaty-plugin-freshdesk)
- [![NPM](https://github.com/wechaty/wechaty-plugin-freshdesk/workflows/NPM/badge.svg)](https://github.com/wechaty/wechaty-plugin-freshdesk/actions?query=workflow%3ANPM)
+[![NPM Version](https://img.shields.io/npm/v/wechaty-plugin-freshdesk?color=brightgreen)](https://www.npmjs.com/package/wechaty-plugin-freshdesk)
+[![NPM](https://github.com/wechaty/wechaty-plugin-freshdesk/workflows/NPM/badge.svg)](https://github.com/wechaty/wechaty-plugin-freshdesk/actions?query=workflow%3ANPM)
 
 Freshdesk is a cloud-based helpdesk system that offers powerful solutions for customer service.
 
@@ -9,6 +9,7 @@ Wechaty Freshdesk Plugin helps Freshdesk unifies conversations from WeChat, and 
 
 ![Wechaty Plugin Freshdesk](docs/images/freshdesk-wechaty.png)
 
+[![Wechaty Plugin Freshdesk](https://img.shields.io/badge/Wechaty%20Plugin-Freshdesk-brightgreen.svg)](https://github.com/wechaty/wechaty-plugin-freshdesk)
 [![Powered by Wechaty](https://img.shields.io/badge/Powered%20By-Wechaty-brightgreen.svg)](https://github.com/Wechaty/wechaty)
 [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-blue.svg)](https://www.typescriptlang.org/)
 
