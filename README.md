@@ -79,6 +79,12 @@ See:
 
 ![Wechaty Freshdesk Conversation](docs/images/wechaty-freshdesk-conversation.png)
 
+## Example
+
+Our Friday BOT are using `wechaty-plugin-freshdesk` to connect our WeChat customers to Freshdesk.
+
+You can read the source code from: <https://github.com/wechaty/friday/blob/master/src/plugins/freshdesk.ts>
+
 ## See Also
 
 1. [WhatsApp Integration in Freshdesk](https://support.freshdesk.com/support/solutions/articles/238137-whatsapp-integration)
