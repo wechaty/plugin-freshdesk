@@ -54,6 +54,9 @@ function WechatyFreshdesk (config: WechatyFreshdeskConfig): WechatyPlugin {
       if (config.at) {
         if (!await message.mentionSelf()) { return }
       }
+      if (await message.mentionList()) {
+        if (!await message.mentionSelf()) { return }
+      }
 
       await talkFreshdeskCustomerQuestion(message)
 
