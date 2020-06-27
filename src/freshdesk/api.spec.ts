@@ -7,7 +7,7 @@ import * as api from './api'
 
 const getUnirestFixture = () => {
   const portalUrl = 'https://juzibot.freshdesk.com/'
-  const apiKey    = 'TbiHxy0YJZ2Q4Bm281XI'
+  const apiKey    = ''
 
   const request = api.getUnirest(portalUrl, apiKey)
   return request
@@ -65,7 +65,7 @@ test.skip('ticketReplier()', async t => {
   t.ok(replyTicket)
 })
 
-test('ticketCreator() with attachments', async t => {
+test.skip('ticketCreator() with attachments', async t => {
   const createTicket = api.ticketCreator(getUnirestFixture())
 
   const ret = await createTicket({
