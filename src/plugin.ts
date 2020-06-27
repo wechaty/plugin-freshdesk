@@ -2,13 +2,14 @@ import {
   Wechaty,
   WechatyPlugin,
   log,
+  Message,
 }                   from 'wechaty'
 import {
   matchers,
   talkers,
 }                   from 'wechaty-plugin-contrib'
 
-import { freshdeskTalker }  from './freshdesk/mod'
+import { freshdeskSupporter }  from './freshdesk/mod'
 import { smeeWebhook }      from './smee'
 import { normalizeConfig }  from './normalize-config'
 
@@ -32,10 +33,37 @@ function WechatyFreshdesk (config: WechatyFreshdeskConfig): WechatyPlugin {
   }                   = normalizeConfig(config)
 
   const talkRoomForConversationClosed = talkers.roomTalker(config.close)
-  const talkFreshdeskCustomerQuestion  = freshdeskTalker(portalUrl, apiKey)
+  const supportFreshdesk = freshdeskSupporter(portalUrl, apiKey)
   const webhook = smeeWebhook(webhookProxyUrl)
 
-  const matchRoom    = matchers.roomMatcher(config.room)
+  const matchRoom = matchers.roomMatcher(config.room)
+
+  const isPluginMessage = async (message: Message): Promise<boolean> => {
+    const room = message.room()
+    const from = message.from()
+
+    if (!from)                          { return false }
+    if (!room)                          { return false }
+    if (message.self())                 { return false }
+
+    const mentionList = await message.mentionList()
+    if (mentionList.length > 0) {
+      if (!await message.mentionSelf()) { return false }
+    }
+
+    return true
+  }
+
+  const isConfigMessage = async (message: Message): Promise<boolean> => {
+    const room = message.room()
+    if (!room)                          { return false }
+
+    if (!await matchRoom(room))         { return false }
+    if (config.at) {
+      if (!await message.mentionSelf()) { return false }
+    }
+    return true
+  }
 
   /**
    * Connect with Wechaty
@@ -44,25 +72,24 @@ function WechatyFreshdesk (config: WechatyFreshdeskConfig): WechatyPlugin {
     log.verbose('WechatyFreshdesk', 'WechatyFreshdeskPlugin(%s)', wechaty)
 
     wechaty.on('message', async message => {
-      const room = message.room()
-      const from = message.from()
+      log.verbose('WechatyFreshdesk', 'WechatyFreshdeskPlugin() wechaty.on(message) %s', message)
 
-      if (!from)                          { return }
-      if (!room)                          { return }
-      if (message.self())                 { return }
-      if (!await matchRoom(room))         { return }
-      if (config.at) {
-        if (!await message.mentionSelf()) { return }
-      }
-      if (await message.mentionList()) {
-        if (!await message.mentionSelf()) { return }
+      if (!await isPluginMessage(message)) {
+        log.silly('WechatyFreshdesk', 'WechatyFreshdeskPlugin() wechaty.on(message) message not match this plugin, skipped.')
+        return
       }
 
-      await talkFreshdeskCustomerQuestion(message)
+      if (!await isConfigMessage(message)) {
+        log.silly('WechatyFreshdesk', 'WechatyFreshdeskPlugin() wechaty.on(message) message not match config, skipped.')
+        return
+      }
 
+      await supportFreshdesk(message)
     })
 
     webhook(async (contactId, text) => {
+      log.verbose('WechatyFreshdesk', 'WechatyFreshdeskPlugin() webhook(%s, %s)', contactId, text)
+
       const contact = wechaty.Contact.load(contactId)
       const roomList = await wechaty.Room.findAll()
 

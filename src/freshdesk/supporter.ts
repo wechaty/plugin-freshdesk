@@ -8,11 +8,11 @@ import stream from 'stream'
 
 import * as api from './api'
 
-function freshdeskTalker (
+function freshdeskSupporter (
   portalUrl: string,
   apiKey: string,
 ) {
-  log.verbose('WechatyPluginFreshdesk', 'freshdeskTalker(%s, %s)', portalUrl, apiKey)
+  log.verbose('WechatyPluginFreshdesk', 'freshdeskSupporter(%s, %s)', portalUrl, apiKey)
 
   const rest = api.getUnirest(portalUrl, apiKey)
 
@@ -22,10 +22,10 @@ function freshdeskTalker (
   const createTicket  = api.ticketCreator(rest)
   const replyTicket   = api.ticketReplier(rest)
 
-  return async function talkFreshdesk (
+  return async function supportFreshdesk (
     message: Message,
   ): Promise<void> {
-    log.verbose('WechatyPluginFreshdesk', 'talkFreshdesk(%s)', message)
+    log.verbose('WechatyPluginFreshdesk', 'supportFreshdesk(%s)', message)
 
     const talker = message.from()!
 
@@ -45,15 +45,18 @@ function freshdeskTalker (
       case Message.Type.Audio:
       case Message.Type.Video:
       case Message.Type.Attachment:
-        const duplex = new stream.Duplex()
-        attachments.push(duplex)
-
         const filebox = await message.toFileBox()
-        filebox.pipe(duplex)
+        const fileStream = await filebox.toStream()
+
+        // https://nodejs.org/api/stream.html#stream_readable_wrap_stream
+        const readable = new stream.Readable()
+          .wrap(fileStream)
+
+        attachments.push(readable)
         break
 
       default:
-        log.verbose('WechatyPluginFreshdesk', 'talkFreshdesk() message type skipped: %s', Message.Type[message.type()])
+        log.verbose('WechatyPluginFreshdesk', 'supportFreshdesk() message type skipped: %s', Message.Type[message.type()])
         return
     }
 
@@ -62,6 +65,8 @@ function freshdeskTalker (
      */
     let userId = await getContact(externalId)
     if (!userId) {
+      log.verbose('WechatyPluginFreshdesk', 'supportFreshdesk() create freshdesk contact from wechaty contact id: %s', externalId)
+
       const newUserId = await createContact({
         externalId,
         name,
@@ -74,9 +79,10 @@ function freshdeskTalker (
      */
     const ticketList = await getTicket(userId)
     if (ticketList.length > 0) {
-
       // FIXME(huan) Make sure the newest ticket is index 0
       const ticketId = ticketList[0]
+
+      log.verbose('WechatyPluginFreshdesk', 'supportFreshdesk() reply existing ticket #%s', ticketId)
 
       await replyTicket({
         attachments,
@@ -92,12 +98,14 @@ function freshdeskTalker (
         : ''
       subject = name + subject
 
-      await createTicket({
+      const ticketId = await createTicket({
         attachments,
         requesterId: userId,
         subject,
         description: text,
       })
+
+      log.verbose('WechatyPluginFreshdesk', 'supportFreshdesk() created new ticket #%s', ticketId)
 
     }
 
@@ -105,4 +113,4 @@ function freshdeskTalker (
 
 }
 
-export { freshdeskTalker }
+export { freshdeskSupporter }

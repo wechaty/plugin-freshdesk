@@ -1,1 +1,1 @@
-export { freshdeskTalker } from './talker'
+export { freshdeskSupporter } from './supporter'
