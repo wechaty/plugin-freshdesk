@@ -1,6 +1,8 @@
 /* eslint-disable camelcase */
 import stream from 'stream'
 
+import { FileBox } from 'wechaty'
+
 import {
   Status,
   Priority,
@@ -16,14 +18,14 @@ interface CreateTicketArgs {
   requesterId : number,
   subject     : string,
   description : string,
-  attachments?: stream.Readable[]
+  attachments?: FileBox[]
 }
 
 interface ReplyTicketArgs {
   ticketId : number,
   userId   : number,
   body     : string,
-  attachments?: stream.Readable[],
+  attachments?: FileBox[],
 }
 
 interface CreateContactArgs {
@@ -33,6 +35,27 @@ interface CreateContactArgs {
 
 interface IdPayload {
   id: number
+}
+
+interface FileInfo {
+  contentType?: string,
+  filename    : string,
+  knownLength : number,
+}
+
+const normalizeFileBox = async (fileBox: FileBox): Promise<{ stream: stream.Readable, info: FileInfo}> => {
+  const boxStream = await fileBox.toStream()
+  const length = (await fileBox.toBuffer()).byteLength
+
+  const info: FileInfo = {
+    contentType : fileBox.mimeType,
+    filename    : fileBox.name,
+    knownLength : length,
+  }
+  return {
+    info,
+    stream: boxStream,
+  }
 }
 
 const ticketCreator = (rest: SimpleUnirest) => async (args: CreateTicketArgs): Promise<number> => {
@@ -58,7 +81,10 @@ const ticketCreator = (rest: SimpleUnirest) => async (args: CreateTicketArgs): P
 
   if (args.attachments && args.attachments.length > 0) {
     request.field(payload)
-    args.attachments.forEach(stream => request.attach('attachments[]', stream))
+    for (const box of args.attachments) {
+      const { stream, info } = await normalizeFileBox(box)
+      request.attach('attachments[]', stream, info)
+    }
   } else {
     request.type('json')
     request.send(payload)
@@ -80,7 +106,10 @@ const ticketReplier = (rest: SimpleUnirest) => async (args: ReplyTicketArgs): Pr
 
   if (args.attachments && args.attachments.length > 0) {
     request.field(payload)
-    args.attachments.forEach(stream => request.attach('attachments[]', stream))
+    for (const box of args.attachments) {
+      const { stream, info } = await normalizeFileBox(box)
+      request.attach('attachments[]', stream, info)
+    }
   } else {
     request.type('json')
     request.send(payload)
@@ -141,7 +170,8 @@ const contactGetter = (rest: SimpleUnirest) => async (externalId: string): Promi
 }
 
 export {
-  getSimpleUnirest as getUnirest,
+  normalizeFileBox,
+  getSimpleUnirest,
   contactGetter,
   contactCreator,
   ticketCreator,
