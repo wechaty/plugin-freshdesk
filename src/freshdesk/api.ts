@@ -12,6 +12,7 @@ import {
 import {
   getSimpleUnirest,
   SimpleUnirest,
+  FileInfo,
 }                     from './unirest'
 
 interface CreateTicketArgs {
@@ -35,12 +36,6 @@ interface CreateContactArgs {
 
 interface IdPayload {
   id: number
-}
-
-interface FileInfo {
-  contentType?: string,
-  filename    : string,
-  knownLength : number,
 }
 
 const normalizeFileBox = async (fileBox: FileBox): Promise<{ stream: stream.Readable, info: FileInfo}> => {

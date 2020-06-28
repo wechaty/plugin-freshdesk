@@ -1,15 +1,22 @@
 #!/usr/bin/env ts-node
 
 import test  from 'tstest'
-import fs from 'fs'
+
+import path from 'path'
+
+import { FileBox } from 'file-box'
 
 import * as api from './api'
 
 const getUnirestFixture = () => {
   const portalUrl = 'https://juzibot.freshdesk.com/'
-  const apiKey    = ''
+  const apiKey    = process.env.WECHATY_PLUGIN_FRESHDESK_API_KEY
 
-  const request = api.getUnirest(portalUrl, apiKey)
+  if (!apiKey) {
+    throw new Error('set WECHATY_PLUGIN_FRESHDESK_API_KEY to run me')
+  }
+
+  const request = api.getSimpleUnirest(portalUrl, apiKey)
   return request
 }
 
@@ -70,10 +77,10 @@ test.skip('ticketCreator() with attachments', async t => {
 
   const ret = await createTicket({
     attachments: [
-      fs.createReadStream('../../README.md'),
-      fs.createReadStream('../../docs/images/freshdesk-wechaty.png'),
+      FileBox.fromFile(path.join(__dirname, '../../README.md')),
+      FileBox.fromFile(path.join(__dirname, '../../docs/images/freshdesk-wechaty.png')),
     ],
-    description : 'test desc',
+    description : 'test desc with filebox',
     requesterId : 64004879462,
     subject     : 'test',
   })
@@ -85,13 +92,15 @@ test.skip('ticketCreator() with attachments', async t => {
 test.skip('ticketReplier() with attachments', async t => {
   const replyTicket = api.ticketReplier(getUnirestFixture())
 
+  const attachments = [
+    FileBox.fromFile(path.join(__dirname, '../../README.md')),
+    FileBox.fromFile(path.join(__dirname, '../../docs/images/freshdesk-wechaty.png')),
+  ]
+
   const ret = await replyTicket({
-    attachments: [
-      fs.createReadStream('../../README.md'),
-      fs.createReadStream('../../docs/images/freshdesk-wechaty.png'),
-    ],
-    body     : 'test reply',
-    ticketId : 15,
+    attachments,
+    body     : 'test reply with filebox',
+    ticketId : 21,
     userId   : 64004879462,
   })
   console.info('ret: ', ret)

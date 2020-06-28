@@ -3,8 +3,10 @@
 import {
   Message,
   log,
-}             from 'wechaty'
-import stream from 'stream'
+}               from 'wechaty'
+import {
+  FileBox,
+}               from 'file-box'
 
 import * as api from './api'
 
@@ -14,7 +16,7 @@ function freshdeskSupporter (
 ) {
   log.verbose('WechatyPluginFreshdesk', 'freshdeskSupporter(%s, %s)', portalUrl, apiKey)
 
-  const rest = api.getUnirest(portalUrl, apiKey)
+  const rest = api.getSimpleUnirest(portalUrl, apiKey)
 
   const getContact    = api.contactGetter(rest)
   const createContact = api.contactCreator(rest)
@@ -35,7 +37,7 @@ function freshdeskSupporter (
     const room = message.room()
     const text = await message.mentionText()
 
-    const attachments: stream.Readable[] = []
+    const attachments: FileBox[] = []
 
     switch (message.type()) {
       case Message.Type.Text:
@@ -46,13 +48,7 @@ function freshdeskSupporter (
       case Message.Type.Video:
       case Message.Type.Attachment:
         const filebox = await message.toFileBox()
-        const fileStream = await filebox.toStream()
-
-        // https://nodejs.org/api/stream.html#stream_readable_wrap_stream
-        const readable = new stream.Readable()
-          .wrap(fileStream)
-
-        attachments.push(readable)
+        attachments.push(filebox)
         break
 
       default:
