@@ -46,12 +46,7 @@ function WechatyFreshdesk (config: WechatyFreshdeskConfig): WechatyPlugin {
     : matchers.roomMatcher(config.room)
 
   const isPluginMessage = async (message: Message): Promise<boolean> => {
-    const room = message.room()
-    const from = message.from()
-
-    if (!from)                          { return false }
-    if (!room)                          { return false }
-    if (message.self())                 { return false }
+    if (message.self()) { return false }
 
     const mentionList = await message.mentionList()
     if (mentionList.length > 0) {
