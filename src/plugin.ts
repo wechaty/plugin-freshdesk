@@ -14,7 +14,8 @@ import { smeeWebhook }      from './smee'
 import { normalizeConfig }  from './normalize-config'
 
 export interface WechatyFreshdeskConfig {
-  room: matchers.RoomMatcherOptions,
+  contact : matchers.ContactMatcherOptions,
+  room    : matchers.RoomMatcherOptions,
 
   close?             : talkers.RoomTalkerOptions,
   at?                : boolean,
@@ -36,7 +37,13 @@ function WechatyFreshdesk (config: WechatyFreshdeskConfig): WechatyPlugin {
   const supportFreshdesk = freshdeskSupporter(portalUrl, apiKey)
   const webhook = smeeWebhook(webhookProxyUrl)
 
-  const matchRoom = matchers.roomMatcher(config.room)
+  const matchContact = typeof config.contact === 'undefined'
+    ? () => true
+    : matchers.contactMatcher(config.contact)
+
+  const matchRoom = typeof config.room === 'undefined'
+    ? () => true
+    : matchers.roomMatcher(config.room)
 
   const isPluginMessage = async (message: Message): Promise<boolean> => {
     const room = message.room()
@@ -55,13 +62,18 @@ function WechatyFreshdesk (config: WechatyFreshdeskConfig): WechatyPlugin {
   }
 
   const isConfigMessage = async (message: Message): Promise<boolean> => {
+    const from = message.from()
     const room = message.room()
-    if (!room)                          { return false }
 
-    if (!await matchRoom(room))         { return false }
-    if (config.at) {
-      if (!await message.mentionSelf()) { return false }
+    if (from && !await matchContact(from))  { return false }
+
+    if (room) {
+      if (!await matchRoom(room))           { return false }
+      if (config.at) {
+        if (!await message.mentionSelf())   { return false }
+      }
     }
+
     return true
   }
 
