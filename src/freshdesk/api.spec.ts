@@ -92,8 +92,10 @@ test.skip('ticketCreator() with attachments', async t => {
 test.skip('ticketReplier() with attachments', async t => {
   const replyTicket = api.ticketReplier(getUnirestFixture())
 
+  const filebox = FileBox.fromFile(path.join(__dirname, '../../NOTICE'))
+
   const attachments = [
-    FileBox.fromFile(path.join(__dirname, '../../README.md')),
+    FileBox.fromBase64(await filebox.toBase64(), '../../NOTICE'),
     FileBox.fromFile(path.join(__dirname, '../../docs/images/freshdesk-wechaty.png')),
   ]
 

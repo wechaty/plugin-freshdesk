@@ -35,12 +35,14 @@ function freshdeskSupporter (
     const name       = talker.name()
 
     const room = message.room()
-    const text = await message.mentionText()
 
-    const attachments: FileBox[] = []
+    let text: string
+
+    const attachmentList: FileBox[] = []
 
     switch (message.type()) {
       case Message.Type.Text:
+        text = await message.mentionText()
         break
 
       case Message.Type.Image:
@@ -48,12 +50,22 @@ function freshdeskSupporter (
       case Message.Type.Video:
       case Message.Type.Attachment:
         const filebox = await message.toFileBox()
-        attachments.push(filebox)
+        text = filebox.name
+
+        log.verbose('WechatyPluginFreshdesk', 'supportFreshdesk() filebox name: %s', filebox.name)
+
+        attachmentList.push(filebox)
         break
 
       default:
-        log.verbose('WechatyPluginFreshdesk', 'supportFreshdesk() message type skipped: %s', Message.Type[message.type()])
+        log.verbose('WechatyPluginFreshdesk', 'supportFreshdesk() message type skipped: %s',
+          Message.Type[message.type()],
+        )
         return
+    }
+
+    if (!text) {
+      text = 'NO TEXT'
     }
 
     /**
@@ -61,7 +73,10 @@ function freshdeskSupporter (
      */
     let userId = await getContact(externalId)
     if (!userId) {
-      log.verbose('WechatyPluginFreshdesk', 'supportFreshdesk() create freshdesk contact from wechaty contact id: %s', externalId)
+      log.verbose('WechatyPluginFreshdesk',
+        'supportFreshdesk() create freshdesk contact from wechaty contact id: %s',
+        externalId,
+      )
 
       const newUserId = await createContact({
         externalId,
@@ -78,10 +93,13 @@ function freshdeskSupporter (
       // FIXME(huan) Make sure the newest ticket is index 0
       const ticketId = ticketList[0]
 
-      log.verbose('WechatyPluginFreshdesk', 'supportFreshdesk() reply existing ticket #%s', ticketId)
+      log.verbose('WechatyPluginFreshdesk',
+        'supportFreshdesk() reply existing ticket #%s',
+        ticketId,
+      )
 
       await replyTicket({
-        attachments,
+        attachments: attachmentList,
         ticketId,
         userId,
         body: text,
@@ -95,13 +113,16 @@ function freshdeskSupporter (
       subject = name + subject
 
       const ticketId = await createTicket({
-        attachments,
+        attachments: attachmentList,
         requesterId: userId,
         subject,
         description: text,
       })
 
-      log.verbose('WechatyPluginFreshdesk', 'supportFreshdesk() created new ticket #%s', ticketId)
+      log.verbose('WechatyPluginFreshdesk',
+        'supportFreshdesk() created new ticket #%s',
+        ticketId,
+      )
 
     }
 

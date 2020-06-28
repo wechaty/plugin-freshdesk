@@ -1,5 +1,3 @@
-import stream from 'stream'
-
 const unirest = require('unirest')
 
 export interface FileInfo {
@@ -10,7 +8,7 @@ export interface FileInfo {
 
 interface UnirestRequest<T> {
   then(cb: (result: { body: T }) => any): any
-  attach: (formName: string, stream: stream.Readable, info?: FileInfo) => UnirestRequest<T>
+  attach: (formName: string, buf: Buffer, info?: FileInfo) => UnirestRequest<T>
   type: (t: 'json') => UnirestRequest<T>
   field: (payload: object) => UnirestRequest<T>
   send: (payload: object) => UnirestRequest<T>
