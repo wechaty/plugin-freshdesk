@@ -14,8 +14,8 @@ import { smeeWebhook }      from './smee'
 import { normalizeConfig }  from './normalize-config'
 
 export interface WechatyFreshdeskConfig {
-  contact : matchers.ContactMatcherOptions,
-  room    : matchers.RoomMatcherOptions,
+  contact? : matchers.ContactMatcherOptions,
+  room?    : matchers.RoomMatcherOptions,
 
   close?             : talkers.RoomTalkerOptions,
   at?                : boolean,
