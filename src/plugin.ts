@@ -60,13 +60,13 @@ function WechatyFreshdesk (config: WechatyFreshdeskConfig): WechatyPlugin {
     const from = message.from()
     const room = message.room()
 
-    if (from && !await matchContact(from))  { return false }
-
     if (room) {
-      if (!await matchRoom(room))           { return false }
+      if (!await matchRoom(room))             { return false }
       if (config.at) {
-        if (!await message.mentionSelf())   { return false }
+        if (!await message.mentionSelf())     { return false }
       }
+    } else {
+      if (from && !await matchContact(from))  { return false }
     }
 
     return true
