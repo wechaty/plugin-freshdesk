@@ -18,7 +18,7 @@ export interface WechatyFreshdeskConfig {
   room?    : matchers.RoomMatcherOptions,
 
   close?             : talkers.RoomTalkerOptions,
-  at?                : boolean,
+  mention?           : boolean,
   webhookProxyUrl?   : string,
   portalUrl? : string,
   apiKey?    : string,
@@ -62,7 +62,7 @@ function WechatyFreshdesk (config: WechatyFreshdeskConfig): WechatyPlugin {
 
     if (room) {
       if (!await matchRoom(room))             { return false }
-      if (config.at) {
+      if (config.mention) {
         if (!await message.mentionSelf())     { return false }
       }
     } else {
