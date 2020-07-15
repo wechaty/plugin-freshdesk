@@ -26,7 +26,7 @@ const config = {
   contact: false, // disable direct message.
   room: 'room_id@chatroom',
 
-  at              : true,
+  mention         : true,
   webhookProxyUrl : 'https://smee.io/your_smee_io_proxy_url',
   apiKey          : 'your_freshdesk_api_key',
   portalUrl       : 'https://your_portal_name.freshdesk.com',
@@ -40,7 +40,7 @@ wechaty.use(FreshdeskPlugin)
 
 1. `config.contact`: Whether to allow direct message to be sync with ticket reply. `false` to deny all, `true` for allow all; Supports contact id(`string`) and contact name(`RegExp`). You can also mix them in array.
 1. `config.room`: The room id of your service WeChat room.
-1. `config.at`: If set to `true`, customers need to use `@` to mention the bot when they want to ask questions.
+1. `config.mention`: If set to `true`, customers need to use `@` to mention the bot when they want to ask questions.
 1. `config.webhookProxyUrl`: A `smee.io` link that you need to set it to receive the Freshdesk Webhook events.
     1. [smee.io - Webhook payload delivery service](https://smee.io/) - Receives payloads then sends them to your locally running application.
 1. `config.apiKey`: The API Key for your Freshdesk account.
@@ -124,6 +124,10 @@ You can read the source code from: <https://github.com/wechaty/friday/blob/maste
 ## History
 
 ### master
+
+### v0.4 master
+
+1. Rename `at` to `mention` in config
 
 ### v0.2 (Jun 26, 2020)
 
