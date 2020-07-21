@@ -16,10 +16,11 @@ import {
 import { normalizeFileBox } from './normalize-file-box'
 
 interface CreateTicketArgs {
-  requesterId  : number,
-  subject      : string,
-  description  : string,
-  attachments? : FileBox[]
+  requesterId    : number,
+  subject        : string,
+  description    : string,
+  attachments?   : FileBox[]
+  custom_fields? : CustomFieldsPayload['custom_fields'],
 }
 
 interface ReplyTicketArgs {
@@ -38,6 +39,12 @@ interface IdPayload {
   id: number
 }
 
+export interface CustomFieldsPayload {
+  custom_fields: {
+    cf_roomid?: null | string
+  },
+}
+
 const ticketCreator = (rest: SimpleUnirest) => async (args: CreateTicketArgs): Promise<number> => {
 
   const DEFAULT_PAYLOAD = {
@@ -47,9 +54,10 @@ const ticketCreator = (rest: SimpleUnirest) => async (args: CreateTicketArgs): P
   }
 
   let payload: TicketPayload = {
-    description  : args.description,
-    requester_id : args.requesterId,
-    subject      : args.subject,
+    custom_fields : args.custom_fields,
+    description   : args.description,
+    requester_id  : args.requesterId,
+    subject       : args.subject,
   }
 
   payload = {
@@ -104,18 +112,25 @@ const ticketReplier = (rest: SimpleUnirest) => async (args: ReplyTicketArgs): Pr
   return ret.body.id
 }
 
-const ticketGetter = (rest: SimpleUnirest) => async (requesterId: number): Promise<number[]> => {
+const ticketGetter = (rest: SimpleUnirest) => async (
+  requesterId: number
+): Promise<(IdPayload & CustomFieldsPayload)[]> => {
   const query = `requester_id=${requesterId}`
-  const ret = await rest.get<IdPayload[]>(`tickets?${query}`)
+  const ret = await rest.get<(IdPayload & CustomFieldsPayload)[]>(`tickets?${query}`)
 
   // console.info(ret.body)
   // return ret.map(p => p.id)
 
-  if (ret.body.length)  {
-    return ret.body.map(p => p.id)
-  } else {
-    return []
+  if (Array.isArray(ret.body)) {
+    return ret.body
   }
+  return []
+
+  // if (ret.body.length)  {
+  //   return ret.body.map(p => p.id)
+  // } else {
+  //   return []
+  // }
 
 }
 

@@ -41,6 +41,9 @@ test.skip('ticketCreator()', async t => {
   const createTicket = api.ticketCreator(getUnirestFixture())
 
   const ret = await createTicket({
+    custom_fields:{
+      cf_roomid   : 'test@room',
+    },
     description : 'test desc',
     requesterId : 64004879462,
     subject     : 'test',
@@ -53,7 +56,12 @@ test.skip('ticketCreator()', async t => {
 test.skip('ticketGetter()', async t => {
   const getTicket = api.ticketGetter(getUnirestFixture())
 
-  const ret = await getTicket(64004879462)
+  let ret = await getTicket(123456)
+  t.deepEqual(ret, [], 'should return a empty list for non-exists ticket id')
+
+  ret = await getTicket(64004879462)
+  t.true(Array.isArray(ret), 'should return a list of ticket payloads')
+
   console.info('ret: ', ret)
 
   t.ok(getTicket)

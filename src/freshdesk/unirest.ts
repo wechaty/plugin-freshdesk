@@ -26,7 +26,7 @@ function getSimpleUnirest (
 ): SimpleUnirest {
   const auth = 'Basic ' + Buffer.from(apiKey + ':' + 'X').toString('base64')
   const headers = {
-    'Authorization': auth,
+    Authorization: auth,
   }
   const preUrl = portalUrl + '/api/v2/'
 

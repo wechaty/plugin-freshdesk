@@ -49,12 +49,14 @@ function freshdeskSupporter (
       case Message.Type.Audio:
       case Message.Type.Video:
       case Message.Type.Attachment:
-        const filebox = await message.toFileBox()
-        text = filebox.name
+        {
+          const filebox = await message.toFileBox()
+          text = filebox.name
 
-        log.verbose('WechatyPluginFreshdesk', 'supportFreshdesk() filebox name: %s', filebox.name)
+          log.verbose('WechatyPluginFreshdesk', 'supportFreshdesk() filebox name: %s', filebox.name)
 
-        attachmentList.push(filebox)
+          attachmentList.push(filebox)
+        }
         break
 
       default:
@@ -86,12 +88,26 @@ function freshdeskSupporter (
     }
 
     /**
-     * Create conversation if not exist yet
+     * Create ticket if not exist yet
      */
-    const ticketList = await getTicket(userId)
-    if (ticketList.length > 0) {
+    const getRoomTicket = async (userId: number, roomId?: string): Promise<number[]> => {
+      let filterRoom
+      if (room) {
+        filterRoom = (payload: api.CustomFieldsPayload) => payload.custom_fields?.cf_roomid === roomId
+      } else {
+        filterRoom = (payload: api.CustomFieldsPayload) => !(payload.custom_fields?.cf_roomid)
+      }
+
+      const idList = (await getTicket(userId))
+        .filter(filterRoom)
+        .map(p => p.id)
+      return idList
+    }
+
+    const ticketIdList = await getRoomTicket(userId, room?.id)
+    if (ticketIdList.length > 0) {
       // FIXME(huan) Make sure the newest ticket is index 0
-      const ticketId = ticketList[0]
+      const ticketId = ticketIdList[0]
 
       log.verbose('WechatyPluginFreshdesk',
         'supportFreshdesk() reply existing ticket #%s',
@@ -117,6 +133,9 @@ function freshdeskSupporter (
         requesterId: userId,
         subject,
         description: text,
+        custom_fields: {
+          cf_roomid: room?.id,
+        },
       })
 
       log.verbose('WechatyPluginFreshdesk',

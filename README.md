@@ -17,6 +17,10 @@ Wechaty Freshdesk Plugin helps Freshdesk unifies conversations from WeChat, and 
 
 Wechaty Freshdesk Plugin helps you to manage your customers/leads/users in the WeChat Room, with the power of the Freshdesk service.
 
+## Requirements
+
+1. Creating a custom field named `RoomId` in Freshdesk first. See: [Creating custom fields in your ticket form](https://support.freshdesk.com/support/solutions/articles/37596-creating-custom-fields-in-your-ticket-form)
+
 ## Usage
 
 ```ts
@@ -123,13 +127,12 @@ You can read the source code from: <https://github.com/wechaty/friday/blob/maste
 
 ## History
 
-### master
-
-### v0.4 master
+### master v0.4 (July 21, 2020)
 
 1. Rename `at` to `mention` in config
+1. Support managing tickets from different WeChat rooms
 
-### v0.2 (Jun 26, 2020)
+### v0.2 (June 26, 2020)
 
 1. Init code base
 1. Room message to Freshdesk
