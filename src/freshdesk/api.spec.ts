@@ -1,4 +1,5 @@
 #!/usr/bin/env ts-node
+/* eslint-disable camelcase */
 
 import test  from 'tstest'
 
@@ -22,19 +23,31 @@ const getUnirestFixture = () => {
 
 test.skip('contactCreator()', async t => {
   const createContact = api.contactCreator(getUnirestFixture())
-  const ret = await createContact({
-    externalId: 'lizhuohuan4',
-    name: 'huan',
-  })
-  console.info('ret:', ret)
   t.ok(createContact)
+
+  const TWITTER_ID = 'lizhuohuan10'
+
+  const ret = await createContact({
+    name: 'huan',
+    twitterId: TWITTER_ID,
+  })
+  // console.info('ret:', ret)
+
+  t.true(ret, 'should create user and get payload')
+  t.equal(ret?.twitter_id, TWITTER_ID, 'should get payload with expected twitter id')
 })
 
-test.skip('contactGetter()', async t => {
+test('contactGetter()', async t => {
+  const TWITTER_ID = 'lizhuohuan4'
+
   const getContact = api.contactGetter(getUnirestFixture())
-  const ret = await getContact('lizhuohuan')
-  console.info('ret:', ret)
   t.ok(getContact)
+
+  const ret = await getContact(TWITTER_ID)
+  // console.info('ret:', ret)
+
+  t.true(ret, 'should get contact by twitter id')
+  t.equal(ret?.twitter_id, TWITTER_ID, 'should get a non-empty payload')
 })
 
 test.skip('ticketCreator()', async t => {

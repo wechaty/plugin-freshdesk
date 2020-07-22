@@ -31,12 +31,27 @@ interface ReplyTicketArgs {
 }
 
 interface CreateContactArgs {
-  externalId : string,
-  name       : string,
+  twitterId : string,
+  name      : string,
 }
 
 interface IdPayload {
   id: number
+}
+
+interface ErrorsPayload {
+  errors?: {
+    field: string
+    message: string
+    code: string
+  }
+}
+
+interface ContactPayload {
+  id           : number
+  external_id? : null | string
+  twitter_id?  : null | string
+  errors?      : ErrorsPayload
 }
 
 export interface CustomFieldsPayload {
@@ -131,38 +146,53 @@ const ticketGetter = (rest: SimpleUnirest) => async (
   // } else {
   //   return []
   // }
-
 }
 
-const contactCreator = (rest: SimpleUnirest) => async (args: CreateContactArgs): Promise<number> => {
+const contactCreator = (rest: SimpleUnirest) => async (
+  args: CreateContactArgs
+): Promise<undefined | ContactPayload> => {
   const payload = {
-    name               : args.name,
-    unique_external_id : args.externalId,
+    name       : args.name,
+    // unique_external_id : args.externalId,
+    twitter_id : args.twitterId,
   }
-
   const ret = await rest
-    .post<IdPayload>('contacts')
+    .post<ContactPayload>('contacts')
     .type('json')
     .send(payload)
 
   // TODO(huan): deal with HTTP non-200 error
 
-  // console.info(ret.body)
-  return ret.body.id
-}
-
-const contactGetter = (rest: SimpleUnirest) => async (externalId: string): Promise<undefined | number> => {
-  const query = `unique_external_id:'${externalId}'`
-  const ret = await rest
-    .get<{ results: IdPayload[] }>(`search/contacts/?query="${query}"`)
-
-  // console.info(ret.body)
-
-  if (ret.body.results.length)  {
-    return ret.body.results.map(p => p.id)[0]
-  } else {
+  if (ret.body.errors) {
+    console.error('contactCreator()', ret.body.errors)
     return undefined
   }
+  // console.info(ret.body)
+  return ret.body
+}
+
+const contactGetter = (rest: SimpleUnirest) => async (
+  twitterId: string
+): Promise<undefined | ContactPayload> => {
+  // const query = `unique_external_id:'${externalId}'`
+  const query = `twitter_id:'${twitterId}'`
+  const ret = await rest
+    .get<{ results: ContactPayload[] }>(`search/contacts/?query="${query}"`)
+
+  // console.info(ret.body)
+
+  if (Array.isArray(ret.body.results)) {
+    if (ret.body.results[0]) {
+      return ret.body.results[0]
+    }
+  }
+  console.error('contactGetter() Unexpected contact payload:', ret.body)
+  return undefined
+
+  // if (ret.body.results.length)  {
+  // } else {
+  //   return undefined
+  // }
 
 }
 
