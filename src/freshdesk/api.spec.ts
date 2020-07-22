@@ -83,7 +83,7 @@ test.skip('ticketGetter()', async t => {
   t.ok(getTicket)
 })
 
-test('ticketReplier()', async t => {
+test.skip('ticketReplier()', async t => {
   const replyTicket = api.ticketReplier(getUnirestFixture())
   t.ok(replyTicket)
 
