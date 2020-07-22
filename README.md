@@ -19,7 +19,11 @@ Wechaty Freshdesk Plugin helps you to manage your customers/leads/users in the W
 
 ## Requirements
 
-1. Creating a custom field named `RoomId` in Freshdesk first. See: [Creating custom fields in your ticket form](https://support.freshdesk.com/support/solutions/articles/37596-creating-custom-fields-in-your-ticket-form)
+1. Wechaty v0.40+
+1. Freshdesk Garden+ Plan
+1. Freshdesk config
+    1. Create two custom ticket fields named `Wechaty Room` and `Wechaty Contact` with type `string`. See: [Creating custom fields in your ticket form](https://support.freshdesk.com/support/solutions/articles/37596-creating-custom-fields-in-your-ticket-form)
+    1. Create Webhook (see below)
 
 ## Usage
 
@@ -84,7 +88,11 @@ Then click `Preview and save`.
 
 > Note: the `POST Url` must be as same as the `webhookProxyUrl` setting in the `config`.
 
-See: [Using Webhooks in automation rules that run on ticket updates](https://support.freshdesk.com/support/solutions/articles/132589-using-webhooks-in-automation-rules-that-run-on-ticket-updates)
+See:
+
+1. [Using Webhooks in automation rules that run on ticket updates](https://support.freshdesk.com/support/solutions/articles/132589-using-webhooks-in-automation-rules-that-run-on-ticket-updates)
+1. [Setting up automation rules to run on 'Ticket Updates'](https://support.freshdesk.com/support/solutions/articles/99047-setting-up-automation-rules-to-run-on-ticket-updates)
+1. [Assuming identities](https://support.freshdesk.com/support/solutions/articles/224634-assuming-identities) (Garden+)
 
 ## Environment Variables
 
@@ -127,7 +135,19 @@ You can read the source code from: <https://github.com/wechaty/friday/blob/maste
 
 ## History
 
-### master v0.4 (July 21, 2020)
+### master (v0.6)
+
+After the Freshdesk trail was end, we found that the following features are belonging to different plans:
+
+1. [Identifying contacts with an external ID](https://support.freshdesk.com/support/solutions/articles/226804-identifying-contacts-with-an-external-id) requires _Estate_
+1. [Assuming identities](https://support.freshdesk.com/support/solutions/articles/224634-assuming-identities) requires _Garden_
+
+1. Supported both direct message and room messages to be managed by freshdesk via tickets
+1. use `twitter_id` as a workaround of `unique_external_id`
+1. Change custom ticket fields on Freshdesk to store `roomId` and `contactId` from Wechaty
+1. Change webhook setting on Freshdesk
+
+### v0.4 (July 21, 2020)
 
 1. Rename `at` to `mention` in config
 1. Support managing tickets from different WeChat rooms

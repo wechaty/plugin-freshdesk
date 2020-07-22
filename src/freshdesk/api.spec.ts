@@ -37,7 +37,7 @@ test.skip('contactCreator()', async t => {
   t.equal(ret?.twitter_id, TWITTER_ID, 'should get payload with expected twitter id')
 })
 
-test('contactGetter()', async t => {
+test.skip('contactGetter()', async t => {
   const TWITTER_ID = 'lizhuohuan4'
 
   const getContact = api.contactGetter(getUnirestFixture())
@@ -52,10 +52,12 @@ test('contactGetter()', async t => {
 
 test.skip('ticketCreator()', async t => {
   const createTicket = api.ticketCreator(getUnirestFixture())
+  t.ok(createTicket)
 
   const ret = await createTicket({
     custom_fields:{
-      cf_roomid   : 'test@room',
+      cf_wechaty_contact : 'id_unit_testing',
+      cf_wechaty_room    : 'id_unit_testing@chatroom',
     },
     description : 'test desc',
     requesterId : 64004879462,
@@ -63,7 +65,8 @@ test.skip('ticketCreator()', async t => {
   })
   console.info('ret: ', ret)
 
-  t.ok(createTicket)
+  t.true(Number.isInteger(ret), 'should get ticket number as integer')
+  t.true(ret > 0, 'should get ticket number bigger than zero')
 })
 
 test.skip('ticketGetter()', async t => {
@@ -80,17 +83,19 @@ test.skip('ticketGetter()', async t => {
   t.ok(getTicket)
 })
 
-test.skip('ticketReplier()', async t => {
+test('ticketReplier()', async t => {
   const replyTicket = api.ticketReplier(getUnirestFixture())
+  t.ok(replyTicket)
 
   const ret = await replyTicket({
     body     : 'test reply',
     ticketId : 15,
-    userId   : 64004879462,
+    userId   : 64007191119,
   })
   console.info('ret: ', ret)
 
-  t.ok(replyTicket)
+  t.true(Number.isInteger(ret), 'should be integer')
+  t.true(ret > 0, 'should get number bigger than 0')
 })
 
 test.skip('ticketCreator() with attachments', async t => {

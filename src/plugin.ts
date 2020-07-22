@@ -7,6 +7,7 @@ import {
 import {
   matchers,
   talkers,
+  types,
 }                   from 'wechaty-plugin-contrib'
 
 import { freshdeskSupporter }  from './freshdesk/mod'
@@ -17,7 +18,7 @@ export interface WechatyFreshdeskConfig {
   contact? : matchers.ContactMatcherOptions,
   room?    : matchers.RoomMatcherOptions,
 
-  close?             : talkers.RoomTalkerOptions,
+  close?             : types.SayableMessage | types.SayableMessage[],
   mention?           : boolean,
   webhookProxyUrl?   : string,
   portalUrl? : string,
@@ -33,7 +34,9 @@ function WechatyFreshdesk (config: WechatyFreshdeskConfig): WechatyPlugin {
     webhookProxyUrl,
   }                   = normalizeConfig(config)
 
-  const talkRoomForConversationClosed = talkers.roomTalker(config.close)
+  const talkRoomForConversationClosed    = talkers.roomTalker(config.close)
+  const talkContactForConversationClosed = talkers.contactTalker(config.close)
+
   const supportFreshdesk = freshdeskSupporter(portalUrl, apiKey)
   const webhook = smeeWebhook(webhookProxyUrl)
 
@@ -94,25 +97,27 @@ function WechatyFreshdesk (config: WechatyFreshdeskConfig): WechatyPlugin {
       await supportFreshdesk(message)
     })
 
-    webhook(async (contactId, text) => {
+    webhook(async (contactId, roomId, text) => {
       log.verbose('WechatyFreshdesk', 'WechatyFreshdeskPlugin() webhook(%s, %s)', contactId, text)
 
       const contact = wechaty.Contact.load(contactId)
-      const roomList = await wechaty.Room.findAll()
 
-      /**
-       * TODO(huan): if one contact in two freshdesk room, how to know which room should the bot reply?
-       */
-      for (const room of roomList) {
-        if (!await matchRoom(room))   { continue }
-        if (!await room.has(contact)) { continue }
+      if (!roomId) {
+        if (text) {
+          await contact.say(text)
+        } else {  // close event
+          await talkContactForConversationClosed(contact)
+        }
+
+      } else {
+        const room = wechaty.Room.load(roomId)
 
         if (text) {
           await room.say(text, contact)
         } else {  // close event
           await talkRoomForConversationClosed(room, contact)
         }
-        break
+
       }
 
     })

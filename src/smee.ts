@@ -9,7 +9,11 @@ import { FreshdeskWebhookNotification } from './freshdesk/webhook'
 
 const SmeeClient = require('smee-client')
 
-type AdminReplyCallback = (contactId: string, text?: string) => void
+type AdminReplyCallback = (
+  contactId: string,
+  roomId?: null | string,
+  text?: string,
+) => void
 
 function smeeWebhook (webhookProxyUrl : string) {
   log.verbose('Freshdesk', 'smeeWebhook(%s)', webhookProxyUrl)
@@ -54,12 +58,14 @@ function smeeWebhook (webhookProxyUrl : string) {
           "ticket_id":12
           "ticket_contact_unique_external_id":"lizhuohuan"
           "ticket_latest_public_comment":"Rui LI : <div style="font-family:-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif; font-size:14px"><div dir="ltr">Hi 李卓桓,<br><br>Good to hear from you!<br><br> </div></div>"
+          "ticket_cf_roomid":"9223372041354269363@im.chatroom"
         }
        */
       const payload = req.body as FreshdeskWebhookNotification
-      const contactId = payload.freshdesk_webhook.ticket_contact_unique_external_id
 
-      let html = payload.freshdesk_webhook.ticket_latest_public_comment
+      const contactId = payload.freshdesk_webhook.ticket_cf_wechaty_contact
+      const roomId    = payload.freshdesk_webhook.ticket_cf_wechaty_room
+      let   html      = payload.freshdesk_webhook.ticket_latest_public_comment
 
       // "Rui LI : <div s...
       html = html.replace(/^.*?</, '<')
@@ -68,11 +74,19 @@ function smeeWebhook (webhookProxyUrl : string) {
       const text = html.replace(/(<([^>]+)>)/ig, '')
 
       // console.info(contactId, ': ', text)
-      log.verbose('Freshdesk', 'freshdeskWebhook() ticket admin replied: %s -> %s',
+      log.verbose('Freshdesk', 'freshdeskWebhook() ticket admin replied: %s%s -> %s',
         contactId,
+        roomId
+          ? `@<${roomId}>`
+          : '',
         text,
       )
-      callback(contactId, text)
+
+      if (contactId) {
+        callback(contactId, roomId, text)
+      } else {
+        log.error('Freshdesk', 'smeeWebhook() freshdeskWebhook() get contactId failed')
+      }
 
       res.end()
     }

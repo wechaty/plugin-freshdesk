@@ -15,6 +15,13 @@ import {
 }                           from './unirest'
 import { normalizeFileBox } from './normalize-file-box'
 
+export interface CustomFieldsPayload {
+  custom_fields: {
+    cf_wechaty_room?    : null | string,
+    cf_wechaty_contact? : null | string,
+  },
+}
+
 interface CreateTicketArgs {
   requesterId    : number,
   subject        : string,
@@ -52,12 +59,6 @@ interface ContactPayload {
   external_id? : null | string
   twitter_id?  : null | string
   errors?      : ErrorsPayload
-}
-
-export interface CustomFieldsPayload {
-  custom_fields: {
-    cf_roomid?: null | string
-  },
 }
 
 const ticketCreator = (rest: SimpleUnirest) => async (args: CreateTicketArgs): Promise<number> => {
@@ -123,7 +124,10 @@ const ticketReplier = (rest: SimpleUnirest) => async (args: ReplyTicketArgs): Pr
   const ret = await request
   //  as any as { body: IdPayload }
 
-  // console.info('ret:', ret.body)
+  if ((ret as any).status !== 200) {
+    console.error(`ticketReplier() HTTP status ${(ret as any).status}`, ret.body)
+    return -1
+  }
   return ret.body.id
 }
 

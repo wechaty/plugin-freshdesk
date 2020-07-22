@@ -10,9 +10,10 @@
 
 interface FreshdeskWebhookTicketAdminReplied {
   freshdesk_webhook: {
-    ticket_id                         : number
-    ticket_contact_unique_external_id : string,
-    ticket_latest_public_comment      : string,
+    ticket_id                    : number
+    ticket_latest_public_comment : string,
+    ticket_cf_wechaty_room?      : null | string,
+    ticket_cf_wechaty_contact?   : null | string,
   }
 }
 
