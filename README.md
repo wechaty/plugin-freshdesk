@@ -1,7 +1,7 @@
-# wechaty-plugin-freshdesk
+# wechaty-freshdesk
 
-[![NPM Version](https://img.shields.io/npm/v/wechaty-plugin-freshdesk?color=brightgreen)](https://www.npmjs.com/package/wechaty-plugin-freshdesk)
-[![NPM](https://github.com/wechaty/wechaty-plugin-freshdesk/workflows/NPM/badge.svg)](https://github.com/wechaty/wechaty-plugin-freshdesk/actions?query=workflow%3ANPM)
+[![NPM Version](https://img.shields.io/npm/v/wechaty-freshdesk?color=brightgreen)](https://www.npmjs.com/package/wechaty-freshdesk)
+[![NPM](https://github.com/wechaty/wechaty-freshdesk/workflows/NPM/badge.svg)](https://github.com/wechaty/wechaty-freshdesk/actions?query=workflow%3ANPM)
 
 [Freshdesk](https://freshdesk.com) is a cloud-based helpdesk system that offers powerful solutions for customer service.
 
@@ -9,15 +9,9 @@ Wechaty Freshdesk Plugin helps Freshdesk unifies conversations from WeChat, and 
 
 ![Wechaty Plugin Freshdesk](docs/images/freshdesk-wechaty.png)
 
-[![Wechaty Plugin Freshdesk](https://img.shields.io/badge/Wechaty%20Plugin-Freshdesk-brightgreen.svg)](https://github.com/wechaty/wechaty-plugin-freshdesk)
+[![Wechaty Plugin Freshdesk](https://img.shields.io/badge/Wechaty%20Plugin-Freshdesk-brightgreen.svg)](https://github.com/wechaty/wechaty-freshdesk)
 [![Powered by Wechaty](https://img.shields.io/badge/Powered%20By-Wechaty-brightgreen.svg)](https://github.com/Wechaty/wechaty)
 [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-blue.svg)](https://www.typescriptlang.org/)
-
-## ATTENTION
-
-The NPM module `wechaty-plugin-freshdesk` has been renamed to `wechaty-freshdesk`.
-
-Please goto visit the new NPM [wechaty-freshdesk](http://npmjs.com/package/wechaty-freshdesk) for latest versions)
 
 ## Introduction
 
@@ -34,7 +28,7 @@ Wechaty Freshdesk Plugin helps you to manage your customers/leads/users in the W
 ## Usage
 
 ```ts
-import { WechatyFreshdesk } from 'wechaty-plugin-freshdesk'
+import { WechatyFreshdesk } from 'wechaty-freshdesk'
 
 const config = {
   contact: false, // disable direct message.
@@ -130,7 +124,7 @@ See:
 
 ## Example
 
-Our Friday BOT are using `wechaty-plugin-freshdesk` to connect our WeChat customers to Freshdesk.
+Our Friday BOT are using `wechaty-freshdesk` to connect our WeChat customers to Freshdesk.
 
 You can read the source code from: <https://github.com/wechaty/friday/blob/master/src/plugins/freshdesk.ts>
 
@@ -166,14 +160,14 @@ After the Freshdesk trail was end, we found that the following features are belo
 
 ## Contributors
 
-[![contributor](https://sourcerer.io/fame/huan/wechaty/wechaty-plugin-freshdesk/images/0)](https://sourcerer.io/fame/huan/wechaty/wechaty-plugin-freshdesk/links/0)
-[![contributor](https://sourcerer.io/fame/huan/wechaty/wechaty-plugin-freshdesk/images/1)](https://sourcerer.io/fame/huan/wechaty/wechaty-plugin-freshdesk/links/1)
-[![contributor](https://sourcerer.io/fame/huan/wechaty/wechaty-plugin-freshdesk/images/2)](https://sourcerer.io/fame/huan/wechaty/wechaty-plugin-freshdesk/links/2)
-[![contributor](https://sourcerer.io/fame/huan/wechaty/wechaty-plugin-freshdesk/images/3)](https://sourcerer.io/fame/huan/wechaty/wechaty-plugin-freshdesk/links/3)
-[![contributor](https://sourcerer.io/fame/huan/wechaty/wechaty-plugin-freshdesk/images/4)](https://sourcerer.io/fame/huan/wechaty/wechaty-plugin-freshdesk/links/4)
-[![contributor](https://sourcerer.io/fame/huan/wechaty/wechaty-plugin-freshdesk/images/5)](https://sourcerer.io/fame/huan/wechaty/wechaty-plugin-freshdesk/links/5)
-[![contributor](https://sourcerer.io/fame/huan/wechaty/wechaty-plugin-freshdesk/images/6)](https://sourcerer.io/fame/huan/wechaty/wechaty-plugin-freshdesk/links/6)
-[![contributor](https://sourcerer.io/fame/huan/wechaty/wechaty-plugin-freshdesk/images/7)](https://sourcerer.io/fame/huan/wechaty/wechaty-plugin-freshdesk/links/7)
+[![contributor](https://sourcerer.io/fame/huan/wechaty/wechaty-freshdesk/images/0)](https://sourcerer.io/fame/huan/wechaty/wechaty-freshdesk/links/0)
+[![contributor](https://sourcerer.io/fame/huan/wechaty/wechaty-freshdesk/images/1)](https://sourcerer.io/fame/huan/wechaty/wechaty-freshdesk/links/1)
+[![contributor](https://sourcerer.io/fame/huan/wechaty/wechaty-freshdesk/images/2)](https://sourcerer.io/fame/huan/wechaty/wechaty-freshdesk/links/2)
+[![contributor](https://sourcerer.io/fame/huan/wechaty/wechaty-freshdesk/images/3)](https://sourcerer.io/fame/huan/wechaty/wechaty-freshdesk/links/3)
+[![contributor](https://sourcerer.io/fame/huan/wechaty/wechaty-freshdesk/images/4)](https://sourcerer.io/fame/huan/wechaty/wechaty-freshdesk/links/4)
+[![contributor](https://sourcerer.io/fame/huan/wechaty/wechaty-freshdesk/images/5)](https://sourcerer.io/fame/huan/wechaty/wechaty-freshdesk/links/5)
+[![contributor](https://sourcerer.io/fame/huan/wechaty/wechaty-freshdesk/images/6)](https://sourcerer.io/fame/huan/wechaty/wechaty-freshdesk/links/6)
+[![contributor](https://sourcerer.io/fame/huan/wechaty/wechaty-freshdesk/images/7)](https://sourcerer.io/fame/huan/wechaty/wechaty-freshdesk/links/7)
 
 ## Author
 

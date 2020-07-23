@@ -1,5 +1,5 @@
 {
-  "name": "wechaty-plugin-freshdesk",
+  "name": "wechaty-freshdesk",
   "version": "0.6.3",
   "description": "Wechaty Freshdesk Plugin helps Freshdesk unifies conversations from WeChat, and helps you resolve issues across channels effortlessly!",
   "main": "dist/src/mod.js",
@@ -53,7 +53,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wechaty/wechaty-plugin-freshdesk.git"
+    "url": "git+https://github.com/wechaty/wechaty-freshdesk.git"
   },
   "keywords": [
     "wechaty",
@@ -63,7 +63,7 @@
   "author": "Huan LI <zixia@zixia.net>",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/wechaty/wechaty-plugin-freshdesk/issues"
+    "url": "https://github.com/wechaty/wechaty-freshdesk/issues"
   },
-  "homepage": "https://github.com/wechaty/wechaty-plugin-freshdesk#readme"
+  "homepage": "https://github.com/wechaty/wechaty-freshdesk#readme"
 }
