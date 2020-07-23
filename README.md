@@ -20,10 +20,10 @@ Wechaty Freshdesk Plugin helps you to manage your customers/leads/users in the W
 ## Requirements
 
 1. Wechaty v0.40+
-1. Freshdesk Garden+ Plan
+1. Freshdesk Garden+ Plan (for [Assuming identities](https://support.freshdesk.com/support/solutions/articles/224634-assuming-identities) support)
 1. Freshdesk config
-    1. Create two custom ticket fields named `Wechaty Room` and `Wechaty Contact` with type `string`. See: [Creating custom fields in your ticket form](https://support.freshdesk.com/support/solutions/articles/37596-creating-custom-fields-in-your-ticket-form)
-    1. Create Webhook (see below)
+    1. Create two custom ticket fields (see [below]())
+    1. Create Webhook (see [below()])
 
 ## Usage
 
@@ -56,14 +56,30 @@ wechaty.use(FreshdeskPlugin)
 
 ## Configure Freshdesk Webhooks
 
-In order to receive the reply and close events from Freshdesk, we need to configure webhooks from the Freshdesk platform.
+In order to receive the reply and close events from Freshdesk, we need to configure the Freshdesk platform:
 
-### 1 Go to Automation Setting Page
+1. Add two custom ticket fields
+1. Add a automation rule for Webhook
+
+> Note: Freshdesk Garden Plan (or above) is required, because we need [Assuming identities](https://support.freshdesk.com/support/solutions/articles/224634-assuming-identities) feature.
+
+### 1 Add Two Custom Ticket Field
+
+1. Login to your Freshdesk agent account, from the menu on the left, select `Admin`, then select `Ticket Fields` under the `General Settings`.
+1. Create two `Single-line text` fields:
+    1. `Wechaty Room`
+    1. `Wechaty Contact`
+
+![Freshdesk Ticket Fields](docs/images/freshdesk-ticket-fields.png)
+
+Doc: [Creating custom fields in your ticket form](https://support.freshdesk.com/support/solutions/articles/37596-creating-custom-fields-in-your-ticket-form)
+
+### 2 Go to Automation Setting Page
 
 1. Login to your Freshdesk agent account, from the menu on the left, select `Admin`, then select `Automations`.
 1. Below the `Rules that run on`, there will be three selections: `Ticket Creation`, `Time Triggers`, and `Ticket Updates`.
 
-### 2 Create a `Ticket Updates` Rule
+### 3 Create a `Ticket Updates` Rule
 
 ![Freshdesk Automation Rule](docs/images/freshdesk-automations-rule.png)
 
@@ -82,7 +98,8 @@ And make sure you have configured the Webhook Content as the following:
 
 1. `Ticket ID {{ticket.id}}`
 1. `Last Public Comment {{ticket.latest_public_comment}}`
-1. `Contact Unique External ID {{ticket.contact.unique_external_id}}`
+1. `Wechaty Room {{ticket.cf_wechaty_room}}`
+1. `Wechaty Contact {{ticket.cf_wechaty_contact}}`
 
 Then click `Preview and save`.
 
