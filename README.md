@@ -154,6 +154,8 @@ You can read the source code from: <https://github.com/wechaty/friday/blob/maste
 
 ### master (v0.6)
 
+#### Renamed from `wechaty-plugin-freshdesk` to `wechaty-freshdesk`
+
 After the Freshdesk trail was end, we found that the following features are belonging to different plans:
 
 1. [Identifying contacts with an external ID](https://support.freshdesk.com/support/solutions/articles/226804-identifying-contacts-with-an-external-id) requires _Estate_
