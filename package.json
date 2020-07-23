@@ -1,6 +1,6 @@
 {
   "name": "wechaty-freshdesk",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "description": "Wechaty Freshdesk Plugin helps Freshdesk unifies conversations from WeChat, and helps you resolve issues across channels effortlessly!",
   "main": "dist/src/mod.js",
   "typings": "dist/src/mod.d.ts",
