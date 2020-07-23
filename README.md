@@ -13,6 +13,12 @@ Wechaty Freshdesk Plugin helps Freshdesk unifies conversations from WeChat, and 
 [![Powered by Wechaty](https://img.shields.io/badge/Powered%20By-Wechaty-brightgreen.svg)](https://github.com/Wechaty/wechaty)
 [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-blue.svg)](https://www.typescriptlang.org/)
 
+## ATTENTION
+
+The NPM module `wechaty-plugin-freshdesk` has been renamed to `wechaty-freshdesk`.
+
+Please goto visit the new NPM [wechaty-freshdesk](http://npmjs.com/package/wechaty-freshdesk) for latest versions)
+
 ## Introduction
 
 Wechaty Freshdesk Plugin helps you to manage your customers/leads/users in the WeChat Room, with the power of the Freshdesk service.
