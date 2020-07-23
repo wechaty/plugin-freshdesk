@@ -31,8 +31,8 @@ Wechaty Freshdesk Plugin helps you to manage your customers/leads/users in the W
 import { WechatyFreshdesk } from 'wechaty-freshdesk'
 
 const config = {
-  contact: false, // disable direct message.
-  room: 'room_id@chatroom',
+  contact: true,              // enable direct message.
+  room: 'room_id@chatroom',   // enable a specific room. `true` for enable all room
 
   mention         : true,
   webhookProxyUrl : 'https://smee.io/your_smee_io_proxy_url',
