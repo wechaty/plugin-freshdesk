@@ -25,26 +25,26 @@ test.skip('contactCreator()', async t => {
   const createContact = api.contactCreator(getUnirestFixture())
   t.ok(createContact)
 
-  const TWITTER_ID = 'lizhuohuan10'
+  const TWITTER_ID = 'lizhuohuan11'
 
   const ret = await createContact({
     name: 'huan',
     twitterId: TWITTER_ID,
   })
-  // console.info('ret:', ret)
+  console.info('ret:', ret)
 
   t.true(ret, 'should create user and get payload')
   t.equal(ret?.twitter_id, TWITTER_ID, 'should get payload with expected twitter id')
 })
 
 test.skip('contactGetter()', async t => {
-  const TWITTER_ID = 'lizhuohuan4'
+  const TWITTER_ID = 'lizhuohuan'
 
   const getContact = api.contactGetter(getUnirestFixture())
   t.ok(getContact)
 
   const ret = await getContact(TWITTER_ID)
-  // console.info('ret:', ret)
+  console.info('ret:', ret)
 
   t.true(ret, 'should get contact by twitter id')
   t.equal(ret?.twitter_id, TWITTER_ID, 'should get a non-empty payload')
@@ -89,8 +89,8 @@ test.skip('ticketReplier()', async t => {
 
   const ret = await replyTicket({
     body     : 'test reply',
-    ticketId : 15,
-    userId   : 64007191119,
+    ticketId : 21,
+    userId   : 64004879462,
   })
   console.info('ret: ', ret)
 

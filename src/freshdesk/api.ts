@@ -124,7 +124,7 @@ const ticketReplier = (rest: SimpleUnirest) => async (args: ReplyTicketArgs): Pr
   const ret = await request
   //  as any as { body: IdPayload }
 
-  if ((ret as any).status !== 200) {
+  if (!/^2/.test((ret as any).status)) {
     console.error(`ticketReplier() HTTP status ${(ret as any).status}`, ret.body)
     return -1
   }
