@@ -20,7 +20,7 @@ Wechaty Freshdesk Plugin helps you to manage your customers/leads/users in the W
 ## Requirements
 
 1. Wechaty v0.40+
-1. Freshdesk Garden+ Plan (for [Assuming identities](https://support.freshdesk.com/support/solutions/articles/224634-assuming-identities) support)
+1. Freshdesk [Garden Plan](https://freshdesk.com/pricing)+ (for [Assuming identities](https://support.freshdesk.com/support/solutions/articles/224634-assuming-identities) support)
 1. Freshdesk config
     1. Create two custom ticket fields
     1. Create Webhook
