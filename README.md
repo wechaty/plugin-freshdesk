@@ -158,8 +158,8 @@ You can read the source code from: <https://github.com/wechaty/friday/blob/maste
 
 After the Freshdesk trail was end, we found that the following features are belonging to different plans:
 
-1. [Identifying contacts with an external ID](https://support.freshdesk.com/support/solutions/articles/226804-identifying-contacts-with-an-external-id) requires **Estate**
-1. [Assuming identities](https://support.freshdesk.com/support/solutions/articles/224634-assuming-identities) requires **Garden**
+1. [Identifying contacts with an external ID](https://support.freshdesk.com/support/solutions/articles/226804-identifying-contacts-with-an-external-id) requires **Estate Plan**
+1. [Assuming identities](https://support.freshdesk.com/support/solutions/articles/224634-assuming-identities) requires **Garden Plan**
 
 1. Supported both direct message and room messages to be managed by freshdesk via tickets
 1. use `twitter_id` as a workaround of `unique_external_id`
