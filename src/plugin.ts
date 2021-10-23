@@ -18,7 +18,7 @@ export interface WechatyFreshdeskConfig {
   contact? : matchers.ContactMatcherOptions,
   room?    : matchers.RoomMatcherOptions,
 
-  close?             : types.SayableMessage | types.SayableMessage[],
+  close?             : types.TalkerMessage | types.TalkerMessage[],
   mention?           : boolean,
   webhookProxyUrl?   : string,
   portalUrl? : string,
