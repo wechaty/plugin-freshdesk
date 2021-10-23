@@ -152,9 +152,11 @@ You can read the source code from: <https://github.com/wechaty/friday/blob/maste
 
 ## History
 
-### master (v0.6)
+### master 1.0 (Oct 23, 2021)
 
-#### Renamed from `wechaty-plugin-freshdesk` to `wechaty-freshdesk`
+Release 1.0 of Wechaty Freshdesk Plugin.
+
+### v0.6 Renamed from `wechaty-plugin-freshdesk` to `wechaty-freshdesk`
 
 After the Freshdesk trail was end, we found that the following features are belonging to different plans:
 
